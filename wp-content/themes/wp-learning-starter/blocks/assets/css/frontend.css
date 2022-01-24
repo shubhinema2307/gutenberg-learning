@@ -1,0 +1,30 @@
+/* fonts */
+@import url("../font/roboto-web/stylesheet.css");
+@import url("../font/nautogal-web/stylesheet.css");
+
+/* common styles */
+.row { width: 100%; display: flex; }
+.col-25 { flex-basis: 25%; }
+.col-50 { flex-basis: 50%; }
+.col-33 { flex-basis: 33.33%; }
+a { text-decoration: none; cursor: pointer; display: inline-block; }
+.has-1-columns > div { width: calc(100% / 1 - 20px); }
+.has-2-columns > div { width: calc(100% / 2 - 20px); }
+.has-3-columns > div { width: calc(100% / 3 - 20px); }
+.has-4-columns > div { width: calc(100% / 4 - 20px); }
+.has-5-columns > div { width: calc(100% / 5 - 20px); }
+.has-6-columns > div { width: calc(100% / 6 - 20px); }
+
+/* container block style */
+.wp-block-wp-learning-container-block { width: 1500px !important; max-width: 1280px !important; margin: 0 auto !important; display: flex !important; }
+
+/* About block style */
+.wp-block-wp-learning-about-block.opposite_column_order .media { order: 2; }
+
+/* Service block style */
+.wp-block-wp-learning-services-block { display: flex; width: 100%; flex-wrap: wrap; margin: 0 -10px; }
+.wp-block-wp-learning-services-block div { margin: 10px; }
+
+/* Features block styles */
+.wp-block-wp-learning-features-block .features-outer-block { display: flex; width: 100%; margin: 0 -10px; flex-wrap: wrap; }
+.wp-block-wp-learning-features-block .features-outer-block div { margin: 10px; }

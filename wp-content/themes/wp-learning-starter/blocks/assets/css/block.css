@@ -1,0 +1,68 @@
+
+/* fonts */
+@import url("../font/roboto-web/stylesheet.css");
+@import url("../font/nautogal-web/stylesheet.css");
+
+/* Block Control style */
+.block-editor-block-toolbar__slot button { height: 100% !important; }
+.css-1dn6kmm-View-BaseLabel.css-1dn6kmm-View-BaseLabel.css-1dn6kmm-View-BaseLabel {margin: 0 0 8px !important; padding: 0 0 2px !important;}
+
+/* Common Styles */
+.row { width: 100%; display: flex;  margin: 0 -2%; }
+.col-25 { flex-basis: 25%; margin: 0 2%; }
+.col-50 { width: 50%; margin: 0 2%; }
+.col-33 { flex-basis: 33.33%; }
+.row-panel { width: 100%; border-top: 1px solid #f2f2f2; padding: 20px 0; }
+
+/* .has-1-columns > div{
+    width: calc(100%/1 - 20px);
+}
+
+.has-2-columns > div{
+    width: calc(100%/2 - 20px);
+}
+
+.has-3-columns > div{
+    width: calc(100%/3 - 20px);
+}
+
+.has-4-columns > div{
+    width: calc(100%/4 - 20px);
+} */
+.row-panel .row-panel-label { font-weight: 700; margin: 0 0 15px; display: inline-block; }
+a { text-decoration: none; cursor: pointer; display: inline-block; }
+
+/* Container Styles */
+.has-2-columns .block-editor-block-list__layout, .has-3-columns .block-editor-block-list__layout, .has-4-columns .block-editor-block-list__layout, .has-5-columns .block-editor-block-list__layout, .has-6-columns .block-editor-block-list__layout { display: flex !important; width: 100%; flex-wrap: wrap;}
+.has-1-columns .block-editor-block-list__layout > div { width: calc(100% / 1 - 20px); }
+.has-2-columns .block-editor-block-list__layout > div { width: calc(100% / 2 - 20px); }
+.has-3-columns .block-editor-block-list__layout > div { width: calc(100% / 3 - 20px); }
+.has-4-columns .block-editor-block-list__layout > div { width: calc(100% / 4 - 20px); }
+.has-5-columns .block-editor-block-list__layout > div { width: calc(100% / 5 - 20px); }
+.has-6-columns .block-editor-block-list__layout > div { width: calc(100% / 6 - 20px); }
+
+/* Banner Styles */
+.image-overlay-setting .components-range-control__wrapper { display: none !important; }
+.image-overlay-setting .css-aaw5kb-View-Root-Input-InputNumber { margin-left: 0 !important; }
+
+/* About block css */
+.wp-block-wp-learning-about-block .media button { padding: 0 !important; }
+.wp-block-wp-learning-about-block.opposite_column_order .media { order: 2; }
+.wp-block-wp-learning-about-block .about-img { position: relative; }
+.wp-block-wp-learning-about-block .about-img .about-img-edit-section { display: flex; position: absolute; top: 0; right: 0; }
+.wp-block-wp-learning-about-block .media .about-img img { width: 100% !important; }
+.wp-block-wp-learning-about-block .media .about-img .about-img-edit-section svg { width: 30px; display: none; opacity: 0.3; margin: 0 5px; background-color: #ffffff; padding: 5px; }
+.wp-block-wp-learning-about-block .media .about-img .about-img-edit-section svg path { fill: red; }
+.wp-block-wp-learning-about-block .about-img:hover .about-img-edit-section svg { display: block; }
+
+/* feature block css */
+.features-outer-block .add-feature-btn { display: flex; align-items: flex-end;}
+.features-outer-block svg { width: 20px; }
+.features-outer-block svg path { fill: #e97f8d; }
+.features-outer-block .feature-inner-block .editor-post-featured-image__toggle { max-width: 150px; }
+.features-outer-block .feature-inner-block .feature-img { position: relative; }
+.features-outer-block .feature-inner-block .feature-img-edit-section {position: absolute; top: 0; left: 0; display: flex; }
+.features-outer-block .feature-inner-block .feature-img:hover .feature-img-edit-section svg {display: block;}
+/* .features-outer-block .feature-inner-block .feature-img-edit-section i { } */
+.features-outer-block .feature-inner-block .feature-img-edit-section svg{display: none; opacity: 0.4;}
+.features-outer-block .feature-inner-block .feature-img-edit-section svg path { fill: red }
