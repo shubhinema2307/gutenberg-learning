@@ -14,7 +14,7 @@ const {
   AlignmentControl,
   RichText,
 } = wp.blockEditor;
-const { PanelBody, TextControl, SelectControl, ToolbarGroup } = wp.components;
+const { PanelBody, TextControl, SelectControl, ToolbarGroup, Tooltip } = wp.components;
 
 registerBlockType("wp-learning/button-block", {
   title: __("button"),
@@ -37,10 +37,10 @@ registerBlockType("wp-learning/button-block", {
     },
     buttonText: {
       type: "string",
-      default: "Button"
+      default: "button"
     },
     buttonFontsize: {
-      type: "number",
+      type: "string",
       default: 14
     },
     buttonFontFamily: {
@@ -176,19 +176,10 @@ registerBlockType("wp-learning/button-block", {
     return (
       <Fragment>
         <InspectorControls>
-          <PanelBody
-            title={__("Button Typography", "wp-learning")}
-            initialOpen={false}
-          >
-            <TextControl
-              label={__("Button FontSize", "wp-learning")}
-              value={buttonFontsize}
-              onChange={(buttonFontsize) => {
-                setAttributes({ buttonFontsize: parseInt(buttonFontsize) });
-              }}
-            />
+          <PanelBody title={__("Typography", "wp-learning")} initialOpen={false}>
+            <div className="row-panel">
             <SelectControl
-              label={__("Button Font Family", "wp-learning")}
+              label={__("Font Family", "wp-learning")}
               value={buttonFontFamily}
               options={[
                 { label: "Roboto", value: "Roboto" },
@@ -196,27 +187,38 @@ registerBlockType("wp-learning/button-block", {
               ]}
               onChange={(newval) => setAttributes({ buttonFontFamily: newval })}
             />
-            <SelectControl
-              label={__("Button Font Weight", "wp-learning")}
-              value={buttonFontWeight}
-              options={[
-                { label: 300, value: 300 },
-                { label: 500, value: 500 },
-                { label: 700, value: 700 },
-                { label: 900, value: 900 },
-              ]}
-              onChange={(buttonFontWeight) => {
-                setAttributes({ buttonFontWeight: parseInt(buttonFontWeight) });
-              }}
-            />
+              <div className="row">
+                <div className="col-50">
+                <TextControl
+                  type="number"
+                  label={__("Font Size", "wp-learning")}
+                  value={buttonFontsize}
+                  onChange={(buttonFontsize) => {
+                    setAttributes({ buttonFontsize: parseInt(buttonFontsize) });
+                  }}
+                />
+                </div>
+                <div className="col-50">
+                <SelectControl
+                    label={__("Font Weight", "wp-learning")}
+                    value={buttonFontWeight}
+                    options={[
+                      { label: 300, value: 300 },
+                      { label: 500, value: 500 },
+                      { label: 700, value: 700 },
+                      { label: 900, value: 900 },
+                    ]}
+                    onChange={(buttonFontWeight) => {
+                      setAttributes({ buttonFontWeight: parseInt(buttonFontWeight) });
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+            
           </PanelBody>
-          <PanelBody
-            title={__("button color setting", "wp-learning")}
-            initialOpen={false}
-          >
-            <PanelColorSettings
-              // title={ __( 'Button text color', 'wp-learning' ) }
-              // initialOpen={ false }
+          {/* <PanelBody title={__("Color Settings", "wp-learning")} initialOpen={false} > */}
+            <PanelColorSettings title={__("Color Settings", "wp-learning")} initialOpen={false}
               colorSettings={[
                 {
                   value: buttonTextColor,
@@ -240,13 +242,13 @@ registerBlockType("wp-learning/button-block", {
                 },
               ]}
             />
-          </PanelBody>
-          <PanelBody
-            title={__("Button Border", "wp-learning")}
-            initialOpen={false}
-          >
-            <TextControl
-              label={__("Button Border width (in px)", "wp-learning")}
+          {/* </PanelBody> */}
+          <PanelBody title={__("Border Settings", "wp-learning")} initialOpen={false} >
+          <div className="row-panel">
+            <div className="row">
+              <div className="col-50">
+              <TextControl
+              label={__("Border width (px)", "wp-learning")}
               value={buttonBorderWidth}
               onChange={(buttonBorderWidth) => {
                 setAttributes({
@@ -254,8 +256,23 @@ registerBlockType("wp-learning/button-block", {
                 });
               }}
             />
+              </div>
+              <div className="col-50">
+              <TextControl
+              label={__("Border Radius (px)", "wp-learning")}
+              value={buttonBorderRadius}
+              onChange={(buttonBorderRadius) => {
+                setAttributes({
+                  buttonBorderRadius: parseInt(buttonBorderRadius),
+                });
+              }}
+            />
+              </div>
+            </div>
+            </div>
+            
             <SelectControl
-              label={__("Button Border style", "wp-learning")}
+              label={__("Border style", "wp-learning")}
               value={buttonBorderStyle}
               options={[
                 { label: "solid", value: "solid" },
@@ -267,30 +284,31 @@ registerBlockType("wp-learning/button-block", {
                 setAttributes({ buttonBorderStyle: newval })
               }
             />
-            <ColorPalette
-              value={buttonBorderColor}
-              onChange={(buttonBorderColor) => {
-                setAttributes({
-                  buttonBorderColor: buttonBorderColor
-                    ? buttonBorderColor
-                    : "transparent",
-                });
-              }}
-            />
-            <TextControl
-              label={__("Button Border Radius (in px)", "wp-learning")}
-              value={buttonBorderRadius}
-              onChange={(buttonBorderRadius) => {
-                setAttributes({
-                  buttonBorderRadius: parseInt(buttonBorderRadius),
-                });
-              }}
-            />
+            <div className="row-panel">
+              <label className="row-panel-label">
+                  { __( 'Border Color', 'wp-learning' ) }
+              </label>
+              <ColorPalette
+                value={buttonBorderColor}
+                onChange={(buttonBorderColor) => {
+                  setAttributes({
+                    buttonBorderColor: buttonBorderColor
+                      ? buttonBorderColor
+                      : "transparent",
+                  });
+                }}
+              />
+            </div>
+            
           </PanelBody>
           <PanelBody
-            title={__("Button padding (in px)", "wp-learning")}
+            title={__("Spacing", "wp-learning")}
             initialOpen={false}
           >
+            <div className="row-panel">
+              <label className="row-panel-label">
+                  { __( 'Padding (px)', 'wp-learning' ) }
+              </label>
             <div class="row">
               <div class="col-25">
                 <TextControl
@@ -337,11 +355,12 @@ registerBlockType("wp-learning/button-block", {
                 />
               </div>
             </div>
-          </PanelBody>
-          <PanelBody
-            title={__("Button margin (in px)", "wp-learning")}
-            initialOpen={false}
-          >
+            </div>
+
+            <div className="row-panel">
+              <label className="row-panel-label">
+                  { __( 'Margin (px)', 'wp-learning' ) }
+              </label>
             <div class="row">
               <div class="col-25">
                 <TextControl
@@ -388,9 +407,11 @@ registerBlockType("wp-learning/button-block", {
                 />
               </div>
             </div>
+          </div>
           </PanelBody>
+       
           <PanelBody
-            title={__("Button link settings", "wp-learning")}
+            title={__("Link settings", "wp-learning")}
             initialOpen={false}
           >
             <TextControl
@@ -413,17 +434,14 @@ registerBlockType("wp-learning/button-block", {
           </ToolbarGroup>
         </BlockControls>
         <div class="wplearning-btn">
-          {/* <a href={buttonlink_url}>{buttonText}</a> */}
-
-          <RichText
-            tagName="a"
-            href={buttonlink_url}
-            onChange={(value) => setAttributes({ buttonText: value })}
-            allowedFormats={["core/bold", "core/italic"]}
-            value={buttonText}
-            placeholder={__("Button Text...")}
-          />
-
+            <RichText
+              tagName="a"
+              href={buttonlink_url}
+              onChange={(value) => setAttributes({ buttonText: value })}
+              allowedFormats={["core/bold", "core/italic"]}
+              value={buttonText}
+              placeholder={__("Button Text...")}
+            />
           <style>
             {`
                #block-${blockId} {

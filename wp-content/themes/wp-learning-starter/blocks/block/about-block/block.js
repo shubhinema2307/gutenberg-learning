@@ -5,7 +5,7 @@
  */
 const { __ } = wp.i18n;
 const { registerBlockType } = wp.blocks;
-const { Fragment } = wp.element;
+const { Component, Fragment } = wp.element;
 const {
   InspectorControls,
   MediaUpload,
@@ -15,104 +15,36 @@ const {
   AlignmentControl,
   RichText,
 } = wp.blockEditor;
-const {
-  PanelBody,
-  TextControl,
-  SelectControl,
-  ToolbarGroup,
-  ToolbarDropdownMenu,
-  Button,
-} = wp.components;
+const { PanelBody, TextControl, SelectControl, ToolbarGroup, Button } =
+  wp.components;
 
-import { Flip, Edit, Remove } from "../custom-icons";
+import { Flip, Edit, Remove, Top, Bottom, Center } from "../custom-icons";
 
-registerBlockType("wp-learning/about-block", {
-  title: __("About"),
-  icon: "format-aside",
-  category: "my-custom-block",
-  keywords: [__("about"), __("details")],
-  // Enable or disable support for low-level features
-  supports: {
-    align: ["full"],
-  },
-  // Set up data model for custom block
-  attributes: {
-    aboutVerticleAlign: {
-      type: "string",
-      default: "center"
-    },
-    blockId: {
-      type: "string",
-      default: ""
-    },
-    mediaId: {
-      type: "number",
-      default: 0
-    },
-    mediaUrl: {
-      type: "string",
-      default: ""
-    },
-    opposite_column_order: {
-      type: "string",
-      default: ""
-    },
-    aboutContentPaddTop: {
-      type: "number",
-      default: 0
-    },
-    aboutContentPaddRight: {
-      type: "number",
-      default: 0
-    },
-    aboutContentPaddBottom: {
-      type: "number",
-      default: 0
-    },
-    aboutContentPaddLeft: {
-      type: "number",
-      default: 0
-    },
-    about_title: {
-      type: "string",
-      default: ""
-    },
-    about_para: {
-      type: "string",
-      default: ""
-    },
-    aboutTitleColor: {
-      type: "string",
-      default: ""
-    },
-    aboutDescColor: {
-      type: "string",
-      default: ""
-    },
-    aboutTitleFontsize: {
-      type: "number",
-      default: 20
-    },
-    aboutDescFontsize: {
-      type: "number",
-      default: 16
-    },
-    aboutTitleFontWeight: {
-      type: "number",
-      default: 400
-    },
-    aboutDescFontWeight: {
-      type: "number",
-      default: 400
-    },
-    aboutContentAlign: {
-      type: "string",
-      default: ""
-    },
-  },
-  // The UI for the WordPress editor
-  edit: (props) => {
-    const { attributes, setAttributes, clientId, className } = props;
+import classnames from "classnames";
+
+class edit extends Component {
+  updatePadding(pos, newPadding) {
+    const { attributes, setAttributes } = this.props;
+    const { padding } = attributes;
+    const position = {
+      top: 0,
+      right: 1,
+      bottom: 2,
+      left: 3,
+    };
+    const updatedPadding = padding.map((val, index) => {
+      if (index === position[pos]) {
+        return newPadding;
+      } else {
+        return val;
+      }
+    });
+
+    setAttributes({ padding: updatedPadding });
+  }
+
+  render() {
+    const { attributes, setAttributes, clientId, className } = this.props;
     const {
       blockId,
       aboutVerticleAlign,
@@ -121,10 +53,7 @@ registerBlockType("wp-learning/about-block", {
       about_title,
       about_para,
       opposite_column_order,
-      aboutContentPaddTop,
-      aboutContentPaddRight,
-      aboutContentPaddBottom,
-      aboutContentPaddLeft,
+      padding,
       aboutTitleColor,
       aboutDescColor,
       aboutTitleFontsize,
@@ -136,39 +65,7 @@ registerBlockType("wp-learning/about-block", {
 
     setAttributes({ blockId: clientId });
 
-    let blockStyle = {};
-    let blockContentStyle = {};
-    
-    ((aboutVerticleAlign) => {
-      if(aboutVerticleAlign !== ''){
-        return (
-          blockStyle = {
-            "align-items": aboutVerticleAlign,
-          }
-        )
-      }
-    })(aboutVerticleAlign);
-   
-
-    
-
-    ((pt, pb, pr, pl, align) => {
-      if((pt !== 0) || (pb !== 0) || (pr !==0) || (pl !== 0)){
-        blockContentStyle["padding"] = (
-              aboutContentPaddTop +
-              "px " +
-              aboutContentPaddRight +
-              "px " +
-              aboutContentPaddBottom +
-              "px " +
-              aboutContentPaddLeft +
-              "px");
-      }
-      if(align !== ''){
-        blockContentStyle["text-align"] = align;
-      }
-    })(aboutContentPaddTop, aboutContentPaddRight, aboutContentPaddBottom, aboutContentPaddLeft, aboutContentAlign);
-
+    const classes = classnames(className, `row`, opposite_column_order);
 
     return (
       <Fragment>
@@ -177,66 +74,84 @@ registerBlockType("wp-learning/about-block", {
             title={__("Content Alignment (Verticle)", "wp-learning")}
             initialOpen={false}
           >
-            <SelectControl
-              value={aboutVerticleAlign}
-              options={[
-                { 
-                  label: "flex-start", value: "flex-start" 
-                },
-                { label: "center", value: "center" },
-                { label: "flex-end", value: "flex-end" },
-              ]}
-              onChange={(newval) =>
-                setAttributes({ aboutVerticleAlign: newval })
-              }
-            />
+            <div class="verticle-align">
+              <i
+                className={` ${
+                  "flex-start" === aboutVerticleAlign ? "active" : ""
+                }`}
+                onClick={() =>
+                  setAttributes({ aboutVerticleAlign: "flex-start" })
+                }
+              >
+                {Top}
+              </i>
+              <i
+                className={` ${
+                  "center" === aboutVerticleAlign ? "active" : ""
+                }`}
+                onClick={() => setAttributes({ aboutVerticleAlign: "center" })}
+              >
+                {Center}
+              </i>
+              <i
+                className={` ${
+                  "flex-end" === aboutVerticleAlign ? "active" : ""
+                }`}
+                onClick={() =>
+                  setAttributes({ aboutVerticleAlign: "flex-end" })
+                }
+              >
+                {Bottom}
+              </i>
+            </div>
           </PanelBody>
-          <PanelBody
-            title={__("Spacings", "wp-learning")}
-            initialOpen={false}
-          >
+          <PanelBody title={__("Spacings", "wp-learning")} initialOpen={false}>
             <div className="row">
               <div className="col-25">
                 <TextControl
-                  label={__("Top:", "wp-learning")}
-                  value={aboutContentPaddTop}
-                  onChange={(aboutContentPaddTop) => {
-                    setAttributes({
-                      aboutContentPaddTop: parseInt(aboutContentPaddTop),
-                    });
+                  type="number"
+                  label="Top"
+                  min={0}
+                  step={1}
+                  value={padding[0] ? padding[0] : 0}
+                  onChange={(paddingTop) => {
+                    this.updatePadding("top", parseInt(paddingTop));
                   }}
                 />
               </div>
               <div className="col-25">
                 <TextControl
-                  label={__("Right", "wp-learning")}
-                  value={aboutContentPaddRight}
-                  onChange={(aboutContentPaddRight) => {
-                    setAttributes({
-                      aboutContentPaddRight: parseInt(aboutContentPaddRight),
-                    });
+                  type="number"
+                  label="Right"
+                  min={0}
+                  step={1}
+                  value={padding[1] ? padding[1] : 0}
+                  onChange={(paddingRight) => {
+                    this.updatePadding("right", parseInt(paddingRight));
                   }}
                 />
               </div>
               <div className="col-25">
                 <TextControl
-                  label={__("Bottom", "wp-learning")}
-                  value={aboutContentPaddBottom}
-                  onChange={(aboutContentPaddBottom) => {
-                    setAttributes({
-                      aboutContentPaddBottom: parseInt(aboutContentPaddBottom),
-                    });
+                  type="number"
+                  label="Bottom"
+                  min={0}
+                  step={1}
+                  value={padding[2] ? padding[2] : 0}
+                  onChange={(paddingBottom) => {
+                    this.updatePadding("bottom", parseInt(paddingBottom));
                   }}
                 />
               </div>
               <div className="col-25">
                 <TextControl
-                  label={__("Left", "wp-learning")}
-                  value={aboutContentPaddLeft}
-                  onChange={(aboutContentPaddLeft) => {
-                    setAttributes({
-                      aboutContentPaddLeft: parseInt(aboutContentPaddLeft),
-                    });
+                  type="number"
+                  label="Left"
+                  min={0}
+                  step={1}
+                  value={padding[3] ? padding[3] : 0}
+                  onChange={(paddingLeft) => {
+                    this.updatePadding("left", parseInt(paddingLeft));
                   }}
                 />
               </div>
@@ -273,71 +188,86 @@ registerBlockType("wp-learning/about-block", {
                 }}
               />
             </div>
-            </PanelBody>
+          </PanelBody>
 
-            <PanelBody
-              title={__("Typography Settings", "wp-learning")}
-              initialOpen={false}
-            >
+          <PanelBody
+            title={__("Typography Settings", "wp-learning")}
+            initialOpen={false}
+          >
             <div className="row-panel">
-              <TextControl
-                label={__("Title Font size", "wp-learning")}
-                value={aboutTitleFontsize}
-                onChange={(aboutTitleFontsize) => {
-                  setAttributes({
-                    aboutTitleFontsize: parseInt(aboutTitleFontsize),
-                  });
-                }}
-              />
+              <label className="row-panel-label">
+                {__("Title settings", "wp-learning")}
+              </label>
+              <div className="row">
+                <div className="col-50">
+                  <TextControl
+                    type="number"
+                    label={__("Font Size", "wp-learning")}
+                    value={aboutTitleFontsize}
+                    onChange={(aboutTitleFontsize) =>
+                      setAttributes({ aboutTitleFontsize })
+                    }
+                  />
+                </div>
+                <div className="col-50">
+                  <SelectControl
+                    label={__("Font Weight", "wp-learning")}
+                    value={aboutTitleFontWeight}
+                    options={[
+                      { label: 400, value: 400 },
+                      { label: 500, value: 500 },
+                      { label: 600, value: 600 },
+                      { label: 700, value: 700 },
+                      { label: 800, value: 800 },
+                      { label: 900, value: 900 },
+                      { label: "Bold", value: "bold" },
+                      { label: "Bolder", value: "bolder" },
+                      { label: "inherit", value: "inherit" },
+                    ]}
+                    onChange={(aboutTitleFontWeight) =>
+                      setAttributes({ aboutTitleFontWeight })
+                    }
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="row-panel">
-              <TextControl
-                label={__("Description Font size", "wp-learning")}
-                value={aboutDescFontsize}
-                onChange={(aboutDescFontsize) => {
-                  setAttributes({
-                    aboutDescFontsize: parseInt(aboutDescFontsize),
-                  });
-                }}
-              />
-            </div>
-
-            <div className="row-panel">
-              <SelectControl
-                label={__("Title Font Weight", "wp-learning")}
-                value={aboutTitleFontWeight}
-                options={[
-                  { label: 300, value: 300 },
-                  { label: 500, value: 500 },
-                  { label: 700, value: 700 },
-                  { label: 900, value: 900 },
-                ]}
-                onChange={(aboutTitleFontWeight) => {
-                  setAttributes({
-                    aboutTitleFontWeight: parseInt(aboutTitleFontWeight),
-                  });
-                }}
-              />
-            </div>
-
-            <div className="row-panel">
-              <SelectControl
-                label={__("Description Font Weight", "wp-learning")}
-                value={aboutDescFontWeight}
-                options={[
-                  { label: 300, value: 300 },
-                  { label: 500, value: 500 },
-                  { label: 700, value: 700 },
-                  { label: 900, value: 900 },
-                ]}
-                //onChange={(newval) => setAttributes({ aboutDescFontWeight: newval })}
-                onChange={(aboutDescFontWeight) => {
-                  setAttributes({
-                    aboutDescFontWeight: parseInt(aboutDescFontWeight),
-                  });
-                }}
-              />
+              <label className="row-panel-label">
+                {__("Description settings", "wp-learning")}
+              </label>
+              <div className="row">
+                <div className="col-50">
+                  <TextControl
+                    type="number"
+                    label={__("Font Size", "wp-learning")}
+                    value={aboutDescFontsize}
+                    onChange={(aboutDescFontsize) =>
+                      setAttributes({ aboutDescFontsize })
+                    }
+                  />
+                </div>
+                <div className="col-50">
+                  <SelectControl
+                    label={__("Font Weight", "wp-learning")}
+                    value={aboutDescFontWeight}
+                    options={[
+                      { label: 400, value: 400 },
+                      { label: 500, value: 500 },
+                      { label: 600, value: 600 },
+                      { label: 700, value: 700 },
+                      { label: 800, value: 800 },
+                      { label: 900, value: 900 },
+                      { label: "Bold", value: "bold" },
+                      { label: "Bolder", value: "bolder" },
+                      { label: "inherit", value: "inherit" },
+                    ]}
+                    onChange={(aboutDescFontWeight) =>
+                      setAttributes({ aboutDescFontWeight })
+                    }
+                  />
+                </div>
+              </div>
             </div>
           </PanelBody>
         </InspectorControls>
@@ -364,10 +294,7 @@ registerBlockType("wp-learning/about-block", {
           </ToolbarGroup>
         </BlockControls>
 
-        <div
-          style={blockStyle}
-          className={`${className} row ${opposite_column_order}`}
-        >
+        <div className={classes}>
           <div className="col-50 media ">
             {mediaId == 0 && (
               <MediaUpload
@@ -375,7 +302,7 @@ registerBlockType("wp-learning/about-block", {
                   setAttributes({
                     mediaId: media.id,
                     mediaUrl: media.url,
-                  })
+                  });
                 }}
                 value={mediaId}
                 allowedTypes={["image"]}
@@ -399,7 +326,7 @@ registerBlockType("wp-learning/about-block", {
                         setAttributes({
                           mediaId: media.id,
                           mediaUrl: media.url,
-                        })
+                        });
                       }}
                       value={mediaId}
                       allowedTypes={["image"]}
@@ -412,12 +339,14 @@ registerBlockType("wp-learning/about-block", {
                   </div>
                   <div className="image-remove">
                     <MediaUploadCheck>
-                      <Button onClick={() => {
-                        setAttributes({
-                          mediaId: 0,
-                          mediaUrl: "",
-                        });
-                      }}>
+                      <Button
+                        onClick={() => {
+                          setAttributes({
+                            mediaId: 0,
+                            mediaUrl: "",
+                          });
+                        }}
+                      >
                         {__(Remove, "wp-learning")}
                       </Button>
                     </MediaUploadCheck>
@@ -426,7 +355,7 @@ registerBlockType("wp-learning/about-block", {
               </div>
             )}
           </div>
-          <div className="col-50 content" style={blockContentStyle}>
+          <div className="col-50 content">
             <RichText
               tagName="h2"
               onChange={(value) => setAttributes({ about_title: value })}
@@ -444,10 +373,15 @@ registerBlockType("wp-learning/about-block", {
               className="about-desc"
             />
           </div>
-        </div>
-        <style>
-          {`
-
+          <style>
+            {`
+                #block-${blockId} .wp-block-wp-learning-about-block{
+                  align-items: ${aboutVerticleAlign};
+                }
+                #block-${blockId} .content{
+                  padding:${padding[0]}px ${padding[1]}px ${padding[2]}px ${padding[3]}px;
+                  text-align: ${aboutContentAlign};
+                }
                 #block-${blockId} .content h2{
                   color: ${aboutTitleColor};
                   font-size: ${aboutTitleFontsize}px;
@@ -459,11 +393,88 @@ registerBlockType("wp-learning/about-block", {
                   font-weight: ${aboutDescFontWeight};
                 }
                  
-               `}
-        </style>
+            `}
+          </style>
+        </div>
       </Fragment>
     );
+  }
+}
+
+registerBlockType("wp-learning/about-block", {
+  title: __("About"),
+  icon: "format-aside",
+  category: "my-custom-block",
+  keywords: [__("about"), __("details")],
+  // Enable or disable support for low-level features
+  supports: {
+    align: ["full"],
   },
+  // Set up data model for custom block
+  attributes: {
+    aboutVerticleAlign: {
+      type: "string",
+      default: "center",
+    },
+    blockId: {
+      type: "string",
+      default: "",
+    },
+    mediaId: {
+      type: "number",
+      default: 0,
+    },
+    mediaUrl: {
+      type: "string",
+      default: "",
+    },
+    opposite_column_order: {
+      type: "string",
+      default: "",
+    },
+    padding: {
+      type: "array",
+      default: [0, 0, 0, 0],
+    },
+    about_title: {
+      type: "string",
+      default: "",
+    },
+    about_para: {
+      type: "string",
+      default: "",
+    },
+    aboutTitleColor: {
+      type: "string",
+      default: "",
+    },
+    aboutDescColor: {
+      type: "string",
+      default: "",
+    },
+    aboutTitleFontsize: {
+      type: "string",
+      default: 20,
+    },
+    aboutDescFontsize: {
+      type: "string",
+      default: 16,
+    },
+    aboutTitleFontWeight: {
+      type: "string",
+      default: 400,
+    },
+    aboutDescFontWeight: {
+      type: "string",
+      default: 400,
+    },
+    aboutContentAlign: {
+      type: "string",
+      default: "",
+    },
+  },
+  // The UI for the WordPress editor
+  edit,
   // The output on the live site
   save: (props) => {
     const { attributes, clientId, className } = props;
@@ -474,10 +485,7 @@ registerBlockType("wp-learning/about-block", {
       about_title,
       about_para,
       opposite_column_order,
-      aboutContentPaddTop,
-      aboutContentPaddRight,
-      aboutContentPaddBottom,
-      aboutContentPaddLeft,
+      padding,
       aboutTitleColor,
       aboutDescColor,
       aboutTitleFontsize,
@@ -487,65 +495,38 @@ registerBlockType("wp-learning/about-block", {
       aboutContentAlign,
     } = attributes;
 
-    const blockStyle = {
-      "align-item": aboutVerticleAlign,
-    };
-
-    const blockContentStyle = {
-      padding:
-        aboutContentPaddTop +
-        "px " +
-        aboutContentPaddRight +
-        "px " +
-        aboutContentPaddBottom +
-        "px " +
-        aboutContentPaddLeft +
-        "px",
-      "text-align": aboutContentAlign,
-    };
-    const blockContentTitleStyle = {
-      color: aboutTitleColor,
-      "font-size": aboutTitleFontsize + "px",
-      "font-weight": aboutTitleFontWeight,
-    };
-    const blockContentDescStyle = {
-      color: aboutDescColor,
-      "font-size": aboutDescFontsize + "px",
-      "font-weight": aboutDescFontWeight,
-    };
+    const classes = classnames(className, `row`, opposite_column_order);
 
     return (
-      <Fragment>
-        <div
-          className={`wp-block-wp-learning-about-block row ${opposite_column_order}`}
-          style={blockStyle}
-        >
-          <div className="col-50 media">
-            <img src={mediaUrl} />
-          </div>
-          <div className="col-50 content" style={blockContentStyle}>
-            <RichText.Content
-              tagName="h2"
-              allowedFormats={["core/bold", "core/italic"]}
-              value={about_title}
-              placeholder={__("Write your Title...")}
-              className="about-heading"
-              style={blockContentTitleStyle}
-            />
-            <RichText.Content
-              tagName="p"
-              allowedFormats={["core/bold", "core/italic"]}
-              value={about_para}
-              placeholder={__("Write your text...")}
-              className="about-desc"
-              style={blockContentDescStyle}
-            />
-          </div>
+      <div className={classes}>
+        <div className="col-50 media">
+          <img src={mediaUrl} />
         </div>
-
+        <div className="col-50 content">
+          <RichText.Content
+            tagName="h2"
+            allowedFormats={["core/bold", "core/italic"]}
+            value={about_title}
+            placeholder={__("Write your Title...")}
+            className="about-heading"
+          />
+          <RichText.Content
+            tagName="p"
+            allowedFormats={["core/bold", "core/italic"]}
+            value={about_para}
+            placeholder={__("Write your text...")}
+            className="about-desc"
+          />
+        </div>
         <style>
           {`
-
+                .wp-block-wp-learning-about-block {
+                  align-items: ${aboutVerticleAlign};
+                }
+                .wp-block-wp-learning-about-block .content {
+                  padding:${padding[0]}px ${padding[1]}px ${padding[2]}px ${padding[3]}px;
+                  text-align: ${aboutContentAlign};
+                }
                 .wp-block-wp-learning-about-block .content h2{
                   color: ${aboutTitleColor};
                   font-size: ${aboutTitleFontsize}px;
@@ -557,9 +538,9 @@ registerBlockType("wp-learning/about-block", {
                   font-weight: ${aboutDescFontWeight};
                 }
                  
-               `}
+            `}
         </style>
-      </Fragment>
+      </div>
     );
   },
 });

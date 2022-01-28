@@ -30,144 +30,35 @@
       RangeControl
   } = wp.components;
 
+  class edit extends Component {
 
-registerBlockType("wp-learning/banner-block", {
-    title: __("banner"),
-    icon: "format-aside",
-    category: "my-custom-block",
-    keywords: [__("banner"), __("hero")],
-    supports: {
-      align: [ 'full' ],
-    },
-    attributes: {
-      blockId: {
-        type: "string",
-        default: ""
-      },
-    mediaId: {
-        type: "number",
-        default: 0
-    },
-    mediaUrl: {
-        type: "string",
-        default: ''
-    },
-    banner_heading: {
-      type: "string",
-      default: ''
-    },
-    banner_para: {
-      type: "string",
-      default: ''
-    },
-    bannerPaddingTop: {
-      type: "number",
-      default: 0
-    },
-    bannerPaddingRight: {
-      type: "number",
-      default: 0
-    },
-    bannerPaddingBottom: {
-      type: "number",
-      default: 0
-    },
-    bannerPaddingLeft: {
-      type: "number",
-      default: 0
-    },
-    banner_bg_size: {
-      type: "string",
-      default: "cover"
-    },
-    banner_bg_repeat: {
-      type: "string",
-      default: "no-repeat"
-    },
-    contentAlign: {
-      type: "string",
-      default: "left"
-    },
-    BannerTitleColor: {
-      type: "string",
-      default: ''
-    },
-    BannerDescColor: {
-      type: "string",
-      default: ''
-    },
-    bannerTitleFontsize: {
-      type: "number",
-      default: 20
-    },
-    bannerDescFontsize: {
-      type: "number",
-      default: 16
-    },
-    bannerTitleFontWeight: {
-      type: "number",
-      default: 300
-    },
-    bannerDescFontWeight: {
-      type: "number",
-      default: 400
-    },
-    bannerImgOverlay: {
-      type: "boolean",
-      default: false
-    },
-    imgOverlayDegree: {
-      type: "number",
-      default: 0
-    },
-    imgOverlayTop_r: {
-      type: "number",
-      default: 255
-    },
-    imgOverlayTop_g: {
-      type: "number",
-      default: 255
-    },
-    imgOverlayTop_b: {
-      type: "number",
-      default: 255
-    },
-    imgOverlayTop_a: {
-      type: "number",
-      default: 0.5
-    },
-    imgOverlayBot_r: {
-      type: "number",
-      default: 255
-    },
-    imgOverlayBot_g: {
-      type: "number",
-      default: 255
-    },
-    imgOverlayBot_b: {
-      type: "number",
-      default: 255
-    },
-    imgOverlayBot_a: {
-      type: "number",
-      default: 0.5
-    },
-    BannerBgColor: {
-      type: "string",
-      default: ''
+    updatePadding(pos, newPadding) {
+      const { attributes, setAttributes } = this.props;
+      const { padding } = attributes;
+      const position = {
+        top: 0,
+        right: 1,
+        bottom: 2,
+        left: 3,
+      };
+      const updatedPadding = padding.map((val, index) => {
+        if (index === position[pos]) {
+          return newPadding;
+        } else {
+          return val;
+        }
+      });
+  
+      setAttributes({ padding: updatedPadding });
     }
-    },
-
-  edit: (props) => {
-    const { attributes, setAttributes, clientId } = props;
+  
+    render() {
+      const { attributes, setAttributes, clientId } = this.props;
     const {
       blockId, 
       mediaId,
       mediaUrl,
-      bannerPaddingTop,
-      bannerPaddingRight,
-      bannerPaddingBottom,
-      bannerPaddingLeft,
+      padding,
       banner_bg_size,
       banner_bg_repeat,
       contentAlign,
@@ -177,6 +68,8 @@ registerBlockType("wp-learning/banner-block", {
       bannerDescFontsize,
       bannerTitleFontWeight,
       bannerDescFontWeight,
+      titleFontFamily,
+      descFontFamily,
       bannerImgOverlay,
       imgOverlayDegree,
       imgOverlayTop_r,
@@ -191,20 +84,6 @@ registerBlockType("wp-learning/banner-block", {
     } = attributes;
 
       setAttributes({ blockId: clientId });
-
-    const removeMedia = () => {
-		props.setAttributes({
-			mediaId: 0,
-			mediaUrl: ''
-		});
-	}
- 
- 	const onSelectMedia = (media) => {
-		props.setAttributes({
-			mediaId: media.id,
-			mediaUrl: media.url
-		});
-	}
  
 
   //linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("");
@@ -214,7 +93,7 @@ registerBlockType("wp-learning/banner-block", {
     
      'background-size': banner_bg_size,
      'background-repeat': banner_bg_repeat,
-     padding: bannerPaddingTop + 'px ' + bannerPaddingRight + 'px ' + bannerPaddingBottom + 'px ' + bannerPaddingLeft + 'px',
+     'padding': padding[0] + `px ` + padding[1] + `px ` + padding[2] + `px ` + padding[3] + `px`,
      'text-align': contentAlign
    }
 
@@ -228,7 +107,7 @@ registerBlockType("wp-learning/banner-block", {
         <Fragment>
               <InspectorControls>
                
-                <PanelBody title={__("Banner Background Color", "wp-learning")}  initialOpen={ false }>
+                <PanelBody title={__("Background Color", "wp-learning")}  initialOpen={ false }>
                   <div className="row-panel image-overlay-setting">
                         <label className="row-panel-label">
                         { __( 'Background Color rgba:', 'wp-learning' ) }
@@ -246,11 +125,16 @@ registerBlockType("wp-learning/banner-block", {
                     </div>
                 </PanelBody>
           
-                <PanelBody title={__("Banner Background Image", "wp-learning")}  initialOpen={ false }>
+                <PanelBody title={__("Background Image", "wp-learning")}  initialOpen={ false }>
                   <div className="editor-post-featured-image">
                     <MediaUploadCheck>
                       <MediaUpload
-                        onSelect={onSelectMedia}
+                        onSelect={(media) => {
+                          setAttributes({
+                            mediaId: media.id,
+                            mediaUrl: media.url
+                          })
+                        }}
                         value={mediaId}
                         allowedTypes={ ['image'] }
                         render={({open}) => (
@@ -277,7 +161,12 @@ registerBlockType("wp-learning/banner-block", {
                             <MediaUpload
                               title={__('Replace image', 'wp-learning')}
                               value={mediaId}
-                              onSelect={onSelectMedia}
+                              onSelect={(media) => {
+                                setAttributes({
+                                  mediaId: media.id,
+                                  mediaUrl: media.url
+                                })
+                              }}
                               allowedTypes={['image']}
                               render={({open}) => (
                                 <Button onClick={open} isSecondary isLarge>{__('Replace image', 'wp-learning')}</Button>
@@ -289,7 +178,14 @@ registerBlockType("wp-learning/banner-block", {
                         <div className="col-50">
                           {mediaId != 0 && 
                             <MediaUploadCheck>
-                              <Button onClick={removeMedia} isLink isDestructive>{__('Remove image', 'wp-learning')}</Button>
+                              <Button 
+                                onClick={() => {
+                                  setAttributes({
+                                    mediaId: 0,
+                                    mediaUrl: ''
+                                  })
+                                }} isLink isDestructive>
+                                  {__('Remove image', 'wp-learning')}</Button>
                             </MediaUploadCheck>
                           }
                         </div>
@@ -422,7 +318,7 @@ registerBlockType("wp-learning/banner-block", {
 
                   <div className="row-panel">
                     <SelectControl
-                        label={__("Banner background size", "wp-learning")}
+                        label={__("Background Size", "wp-learning")}
                         value={banner_bg_size}
                         options={[
                           { label: "auto", value: "auto" },
@@ -435,7 +331,7 @@ registerBlockType("wp-learning/banner-block", {
 
                   <div className="row-panel">
                     <SelectControl
-                        label={__("Banner background repeat", "wp-learning")}
+                        label={__("Background Repeat", "wp-learning")}
                         value={banner_bg_repeat}
                         options={[
                           { label: "repeat", value: "repeat" },
@@ -446,60 +342,63 @@ registerBlockType("wp-learning/banner-block", {
                         onChange={(newval) => setAttributes({ banner_bg_repeat: newval })}
                       />
                   </div>
-                    
                 </PanelBody>
           
 
-                <PanelBody title={__("Banner padding", "wp-learning")}  initialOpen={ false }>
+                <PanelBody title={__("Spacing", "wp-learning")}  initialOpen={ false }>
                   <div className="row">
                       <div className="col-25">
                         <TextControl
-                          label={__("T:", "wp-learning")}
-                          value={bannerPaddingTop}
-                          onChange={(bannerPaddingTop) => {
-                            setAttributes({
-                              bannerPaddingTop: parseInt(bannerPaddingTop),
-                            });
+                          type="number"
+                          label="Top"
+                          min={0}
+                          step={1}
+                          value={padding[0] ? padding[0] : 0}
+                          onChange={(paddingTop) => {
+                            this.updatePadding("top", parseInt(paddingTop));
                           }}
                         />
                       </div>
                       <div className="col-25">
                         <TextControl
-                          label={__("R", "wp-learning")}
-                          value={bannerPaddingRight}
-                          onChange={(bannerPaddingRight) => {
-                            setAttributes({
-                              bannerPaddingRight: parseInt(bannerPaddingRight),
-                            });
+                          type="number"
+                          label="Right"
+                          min={0}
+                          step={1}
+                          value={padding[1] ? padding[1] : 0}
+                          onChange={(paddingRight) => {
+                            this.updatePadding("right", parseInt(paddingRight));
                           }}
                         />
                       </div>
                       <div className="col-25">
                         <TextControl
-                          label={__("B", "wp-learning")}
-                          value={bannerPaddingBottom}
-                          onChange={(bannerPaddingBottom) => {
-                            setAttributes({
-                              bannerPaddingBottom: parseInt(bannerPaddingBottom),
-                            });
+                          type="number"
+                          label="Bottom"
+                          min={0}
+                          step={1}
+                          value={padding[2] ? padding[2] : 0}
+                          onChange={(paddingBottom) => {
+                            this.updatePadding("bottom", parseInt(paddingBottom));
                           }}
                         />
                       </div>
                       <div className="col-25">
                         <TextControl
-                          label={__("L", "wp-learning")}
-                          value={bannerPaddingLeft}
-                          onChange={(bannerPaddingLeft) => {
-                            setAttributes({
-                              bannerPaddingLeft: parseInt(bannerPaddingLeft),
-                            });
+                          type="number"
+                          label="Left"
+                          min={0}
+                          step={1}
+                          value={padding[3] ? padding[3] : 0}
+                          onChange={(paddingLeft) => {
+                            this.updatePadding("left", parseInt(paddingLeft));
                           }}
                         />
                       </div>
                     </div>
                 </PanelBody>
 
-                <PanelBody title={__("Banner content setting", "wp-learning")}  initialOpen={ false }>
+                <PanelBody title={__("Color Settings", "wp-learning")}  initialOpen={ false }>
                   <div className="row-panel">
                     <label className="row-panel-label">
                         { __( 'Title Text color', 'wp-learning' ) }
@@ -531,62 +430,94 @@ registerBlockType("wp-learning/banner-block", {
                       }}
                     />
                   </div>
+                </PanelBody>
 
+                <PanelBody title={__("Typography Settings", "wp-learning")}  initialOpen={ false }>
                   <div className="row-panel">
-                    <TextControl
-                      label={__("Banner title font size", "wp-learning")}
-                      value={bannerTitleFontsize}
-                      onChange={(bannerTitleFontsize) => {
-                        setAttributes({
-                          bannerTitleFontsize: parseInt(bannerTitleFontsize),
-                        });
-                      }}
+                    <label className="row-panel-label">
+                        { __( 'Title Settings', 'wp-learning' ) }
+                    </label>
+                    <SelectControl
+                        label={__("Font Family", "wp-learning")}
+                        value={titleFontFamily}
+                        options={[
+                            { label: "Roboto", value: "Roboto" },
+                            { label: "Nautigal", value: "Nautigal" },
+                        ]}
+                        onChange={(newval) => setAttributes({ titleFontFamily: newval })}
                     />
+                    <div className="row">
+                      <div className="col-50">
+                        <TextControl
+                          type="number"
+                          label={__( "Font Size", "wp-learning" )}
+                          value={bannerTitleFontsize}
+                          onChange={bannerTitleFontsize=>setAttributes({bannerTitleFontsize})}
+                        />
+                      </div>
+                      <div className="col-50">
+                        <SelectControl
+                          label={__( "Font Weight", "wp-learning" )}
+                          value={bannerTitleFontWeight}
+                          options={[
+                            { label: 400, value:400 },
+                            { label: 500, value:500 },
+                            { label: 600, value:600 },
+                            { label: 700, value:700 },
+                            { label: 800, value:800 },
+                            { label: 900, value:900 },
+                            { label: "Bold", value:"bold" },
+                            { label: "Bolder", value:"bolder" },
+                            { label: "inherit", value:"inherit" },
+                          ]}
+                          onChange={bannerTitleFontWeight=>setAttributes({bannerTitleFontWeight})}
+                        />
+                      </div>
+                    </div>
+                    
                   </div>
 
                   <div className="row-panel">
-                    <TextControl
-                      label={__("Banner description font size", "wp-learning")}
-                      value={bannerDescFontsize}
-                      onChange={(bannerDescFontsize) => {
-                        setAttributes({
-                          bannerDescFontsize: parseInt(bannerDescFontsize),
-                        });
-                      }}
+                    <label className="row-panel-label">
+                        { __( 'Deescription Settings', 'wp-learning' ) }
+                    </label>
+                    <SelectControl
+                        label={__("Font Family", "wp-learning")}
+                        value={descFontFamily}
+                        options={[
+                            { label: "Roboto", value: "Roboto" },
+                            { label: "Nautigal", value: "Nautigal" },
+                        ]}
+                        onChange={(newval) => setAttributes({ descFontFamily: newval })}
                     />
-                  </div>
-
-                  <div className="row-panel">
-                  <SelectControl
-                    label={__("Banner Title Font Weight", "wp-learning")}
-                    value={bannerTitleFontWeight}
-                    options={[
-                      { label: 300, value: 300 },
-                      { label: 500, value: 500 },
-                      { label: 700, value: 700 },
-                      { label: 900, value: 900 },
-                    ]}
-                    onChange={(bannerTitleFontWeight) => {
-                      setAttributes({ bannerTitleFontWeight: parseInt(bannerTitleFontWeight) });
-                    }}
-                  />
-                  </div>
-
-                  <div className="row-panel">
-
-                  <SelectControl
-                    label={__("Banner Description Font Weight", "wp-learning")}
-                    value={bannerDescFontWeight}
-                    options={[
-                      { label: 300, value: 300 },
-                      { label: 500, value: 500 },
-                      { label: 700, value: 700 },
-                      { label: 900, value: 900 },
-                    ]}
-                    onChange={(bannerDescFontWeight) => {
-                      setAttributes({ bannerDescFontWeight: parseInt(bannerDescFontWeight) });
-                    }}
-                  />
+                    <div className="row">
+                      <div className="col-50">
+                      <TextControl
+                          type="number"
+                          label={__( "Font Size", "wp-learning" )}
+                          value={bannerDescFontsize}
+                          onChange={bannerDescFontsize=>setAttributes({bannerDescFontsize})}
+                        />
+                      </div>
+                      <div className="col-50">
+                        <SelectControl
+                          label={__( "Font Weight", "wp-learning" )}
+                          value={bannerDescFontWeight}
+                          options={[
+                            { label: 400, value:400 },
+                            { label: 500, value:500 },
+                            { label: 600, value:600 },
+                            { label: 700, value:700 },
+                            { label: 800, value:800 },
+                            { label: 900, value:900 },
+                            { label: "Bold", value:"bold" },
+                            { label: "Bolder", value:"bolder" },
+                            { label: "inherit", value:"inherit" },
+                          ]}
+                          onChange={bannerDescFontWeight=>setAttributes({bannerDescFontWeight})}
+                        />
+                      </div>
+                    </div>
                   </div>
                 </PanelBody>
                    
@@ -632,28 +563,152 @@ registerBlockType("wp-learning/banner-block", {
                     color: ${BannerTitleColor};
                     font-size: ${bannerTitleFontsize}px;
                     font-weight: ${bannerTitleFontWeight};
+                    font-family: ${titleFontFamily};
                   }
                   #block-${blockId} .banner-content-block p{
                     color: ${BannerDescColor};
                     font-size: ${bannerDescFontsize}px;
                     font-weight: ${bannerDescFontWeight};
+                    font-family: ${descFontFamily};
                   }
                   
               `}
             </style>
         </Fragment>
     );
+    }
 
-  },
+  }
+registerBlockType("wp-learning/banner-block", {
+    title: __("banner"),
+    icon: "format-aside",
+    category: "my-custom-block",
+    keywords: [__("banner"), __("hero")],
+    supports: {
+      align: [ 'full' ],
+    },
+    attributes: {
+      blockId: {
+        type: "string",
+        default: ""
+      },
+    mediaId: {
+        type: "number",
+        default: 0
+    },
+    mediaUrl: {
+        type: "string",
+        default: ''
+    },
+    banner_heading: {
+      type: "string",
+      default: ''
+    },
+    banner_para: {
+      type: "string",
+      default: ''
+    },
+    padding: {
+      type: "array",
+      default: [0, 0, 0, 0],
+    },
+    banner_bg_size: {
+      type: "string",
+      default: "cover"
+    },
+    banner_bg_repeat: {
+      type: "string",
+      default: "no-repeat"
+    },
+    contentAlign: {
+      type: "string",
+      default: "left"
+    },
+    BannerTitleColor: {
+      type: "string",
+      default: ''
+    },
+    BannerDescColor: {
+      type: "string",
+      default: ''
+    },
+    bannerTitleFontsize: {
+      type: "number",
+      default: 20
+    },
+    bannerDescFontsize: {
+      type: "number",
+      default: 16
+    },
+    bannerTitleFontWeight: {
+      type: "string",
+      default: 300
+    },
+    bannerDescFontWeight: {
+      type: "string",
+      default: 400
+    },
+    titleFontFamily: {
+      type: "string",
+      default: "Roboto"
+    },
+    descFontFamily: {
+      type: "string",
+      default: "Roboto"
+    },
+    bannerImgOverlay: {
+      type: "boolean",
+      default: false
+    },
+    imgOverlayDegree: {
+      type: "number",
+      default: 0
+    },
+    imgOverlayTop_r: {
+      type: "number",
+      default: 255
+    },
+    imgOverlayTop_g: {
+      type: "number",
+      default: 255
+    },
+    imgOverlayTop_b: {
+      type: "number",
+      default: 255
+    },
+    imgOverlayTop_a: {
+      type: "number",
+      default: 0.5
+    },
+    imgOverlayBot_r: {
+      type: "number",
+      default: 255
+    },
+    imgOverlayBot_g: {
+      type: "number",
+      default: 255
+    },
+    imgOverlayBot_b: {
+      type: "number",
+      default: 255
+    },
+    imgOverlayBot_a: {
+      type: "number",
+      default: 0.5
+    },
+    BannerBgColor: {
+      type: "string",
+      default: ''
+    }
+    },
+
+  edit,
    save: (props) => {
     const { attributes, clientId } = props;
     const {  
       blockId,
       mediaUrl,
-      bannerPaddingTop,
-      bannerPaddingRight,
-      bannerPaddingBottom,
-      bannerPaddingLeft,
+      padding,
       banner_bg_size,
       banner_bg_repeat,
       contentAlign,
@@ -663,6 +718,8 @@ registerBlockType("wp-learning/banner-block", {
       bannerDescFontsize,
       bannerTitleFontWeight,
       bannerDescFontWeight,
+      titleFontFamily,
+      descFontFamily,
       bannerImgOverlay,
       imgOverlayDegree,
       imgOverlayTop_r,
@@ -680,7 +737,7 @@ registerBlockType("wp-learning/banner-block", {
 
         'background-size': banner_bg_size,
         'background-repeat': banner_bg_repeat,
-        padding: bannerPaddingTop + 'px ' + bannerPaddingRight + 'px ' + bannerPaddingBottom + 'px ' + bannerPaddingLeft + 'px',
+        'padding': padding[0] + `px ` + padding[1] + `px ` + padding[2] + `px ` + padding[3] + `px`,
         'text-align': contentAlign
       }
    
@@ -713,12 +770,13 @@ registerBlockType("wp-learning/banner-block", {
 
             <style>
               {`
-                  #wp-learning-${blockId} .banner-content-block h1{
+                
+                  #wp-learning-${blockId} h1{
                     color: ${BannerTitleColor};
                     font-size: ${bannerTitleFontsize}px;
                     font-weight: ${bannerTitleFontWeight};
                   }
-                  #wp-learning-${blockId} .banner-content-block p{
+                  #wp-learning-${blockId} p{
                     color: ${BannerDescColor};
                     font-size: ${bannerDescFontsize}px;
                     font-weight: ${bannerDescFontWeight};

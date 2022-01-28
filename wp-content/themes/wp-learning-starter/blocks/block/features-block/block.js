@@ -28,15 +28,13 @@ const {
 } = wp.components;
 
 import { plus, left, right, remove, Remove, Edit } from "../custom-icons";
+import $ from 'jquery';
 
 class edit extends Component {
+
   constructor(props) {
     super(props);
     this.addNewFeature = this.addNewFeature.bind(this);
-    this.state = {
-      count: 1,
-    };
-    console.log("call");
   }
 
   componentDidMount() {
@@ -45,7 +43,21 @@ class edit extends Component {
     if (featureContentArray == 0) {
       this.OnInitFeatures();
     }
+
+    // $('.feature-inner-block').on("click", function(){
+      
+		jQuery(document).on("focus", ".feature-btn>a", function(e){
+      e.preventDefault();
+        jQuery(this).parents().children('.btn-Url-wrap').children('.btn-Url').css('display', 'block');
+      });
+
+      jQuery(document).on("click", ".close-Url-popup", function(e){
+        e.preventDefault();
+          jQuery(this).parents().children('.btn-Url-wrap').children('.btn-Url').css('display', 'none');
+        });
+
   }
+
 
   OnInitFeatures() {
     const { setAttributes, attributes } = this.props;
@@ -60,6 +72,8 @@ class edit extends Component {
           feature_para: "",
           feature_mediaId: "",
           feature_mediaUrl: "",
+          feature_btnUrl: "",
+          feature_btnText: ""
         },
       ],
     });
@@ -75,6 +89,8 @@ class edit extends Component {
       feature_para: "",
       feature_mediaId: "",
       feature_mediaUrl: "",
+      feature_btnUrl: "",
+      feature_btnText: ""
     };
     setAttributes({
       featureContentArray: [...featureContentArray, objAddNewFeature],
@@ -112,13 +128,20 @@ class edit extends Component {
       featureDescFontFamily
     } = attributes;
 
-    console.log("render");
-
     setAttributes({ blockId: clientId });
 
     const blockStyle = {
       "text-align": contentAlign,
     };
+
+    
+    // var element = document.getElementsByClassName('btn-Url');
+    // for (var i=0;i<element.length;i+=1){
+    //   element[i].style.display = 'none';
+    // }
+    // document.getElementsByClassName('feature-btn>a').addEventListener('click', function() {
+    //   element.style.display = 'block';
+    // })
 
     const featureItrableContent = featureContentArray.map((data, index) => {
       return (
@@ -243,6 +266,36 @@ class edit extends Component {
             placeholder={__("Paragraph...")}
             className="feature-desc"
           />
+
+          <div className="feature-btn">
+            <div className="btn-Url-wrap">
+              <div className="btn-Url">
+                  <div className="close-Url-popup"><i>{Remove}</i></div>
+                  <TextControl
+                    label={__( "Button Url", "wp-learning" )}
+                    value={data.feature_btnUrl}
+                    onChange={(value) => {
+                      let arrayCopy = [...featureContentArray];
+                      arrayCopy[index].feature_btnUrl = value;
+                      setAttributes({ featureContentArray: arrayCopy });
+                    }}
+                  />
+              </div>
+            </div>
+            <RichText
+            tagName="a"
+            href={data.feature_btnUrl}
+            onChange={(value) => {
+              let arrayCopy = [...featureContentArray];
+              arrayCopy[index].feature_btnText = value;
+              setAttributes({ featureContentArray: arrayCopy });
+            }}
+            allowedFormats={["core/bold", "core/italic"]}
+            value={data.feature_btnText}
+            placeholder={__("Button Text")}
+            className="feature-btn-txt"
+          />
+          </div>
         </div>
       );
     });
@@ -316,30 +369,28 @@ class edit extends Component {
                     <div className="row">
                         <div className="col-50">
                             <TextControl
-                                label={__("Font size", "wp-learning")}
-                                value={featureTitleFontsize}
-                                onChange={(featureTitleFontsize) => {
-                                    setAttributes({
-                                      featureTitleFontsize: parseInt(featureTitleFontsize),
-                                    });
-                                }}
+                              type="number"
+                              label={__( "Font Size", "wp-learning" )}
+                              value={featureTitleFontsize}
+                              onChange={featureTitleFontsize=>setAttributes({featureTitleFontsize})}
                             />
                         </div>
                         <div className="col-50">
                             <SelectControl
-                                label={__("Font Weight", "wp-learning")}
-                                value={featureTitleFontWeight}
-                                options={[
-                                    { label: 300, value: 300 },
-                                    { label: 500, value: 500 },
-                                    { label: 700, value: 700 },
-                                    { label: 900, value: 900 },
-                                ]}
-                                onChange={(featureTitleFontWeight) => {
-                                    setAttributes({
-                                        featureTitleFontWeight: parseInt(featureTitleFontWeight),
-                                    });
-                                }}
+                              label={__( "Font Weight", "wp-learning" )}
+                              value={featureTitleFontWeight}
+                              options={[
+                                { label: 400, value:400 },
+                                { label: 500, value:500 },
+                                { label: 600, value:600 },
+                                { label: 700, value:700 },
+                                { label: 800, value:800 },
+                                { label: 900, value:900 },
+                                { label: "Bold", value:"bold" },
+                                { label: "Bolder", value:"bolder" },
+                                { label: "inherit", value:"inherit" },
+                              ]}
+                              onChange={featureTitleFontWeight=>setAttributes({featureTitleFontWeight})}
                             />
                         </div>
                     </div>
@@ -361,38 +412,43 @@ class edit extends Component {
                     <div className="row">
                       <div className="col-50">
                           <TextControl
-                              label={__("Font Size", "wp-learning")}
-                              value={featureDescFontsize}
-                              onChange={(featureDescFontsize) => {
-                                  setAttributes({
-                                      featureDescFontsize: parseInt(featureDescFontsize),
-                                  });
-                              }}
+                            type="number"
+                            label={__( "Font Size", "wp-learning" )}
+                            value={featureDescFontsize}
+                            onChange={featureDescFontsize=>setAttributes({featureDescFontsize})}
                           />
                       </div>
                       <div className="col-50">
                           <SelectControl
-                              label={__("Font Weight", "wp-learning")}
-                              value={featureDescFontWeight}
-                              options={[
-                                  { label: 300, value: 300 },
-                                  { label: 500, value: 500 },
-                                  { label: 700, value: 700 },
-                                  { label: 900, value: 900 },
-                              ]}
-                              onChange={(featureDescFontWeight) => {
-                                  setAttributes({
-                                      featureDescFontWeight: parseInt(featureDescFontWeight),
-                                  });
-                              }}
+                            label={__( "Font Weight", "wp-learning" )}
+                            value={featureDescFontWeight}
+                            options={[
+                              { label: 400, value:400 },
+                              { label: 500, value:500 },
+                              { label: 600, value:600 },
+                              { label: 700, value:700 },
+                              { label: 800, value:800 },
+                              { label: 900, value:900 },
+                              { label: "Bold", value:"bold" },
+                              { label: "Bolder", value:"bolder" },
+                              { label: "inherit", value:"inherit" },
+                          ]}
+                            onChange={featureDescFontWeight=>setAttributes({featureDescFontWeight})}
                           />
                       </div>
                     </div>
-                    
-                
-                    
                 </div>
           </PanelBody>
+
+          {/* <PanelBody title={__("Button Settings", "wp-learning")} initialOpen={false} >
+              <div className="row-panel">
+                  <TextControl
+                    label={__("Button Text", "wp-learning")}
+                    value={featureBtnText}
+                    onChange={featureBtnText=>setAttributes({featureBtnText})}
+                  />
+              </div>
+          </PanelBody> */}
         </InspectorControls>
 
         <BlockControls>
@@ -482,19 +538,19 @@ registerBlockType("wp-learning/features-block", {
       default: ""
     },
     featureTitleFontsize: {
-      type: "number",
+      type: "string",
       default: 20
     },
     featureDescFontsize: {
-      type: "number",
+      type: "string",
       default: 16
     },
     featureTitleFontWeight: {
-      type: "number",
+      type: "string",
       default: 400
     },
     featureDescFontWeight: {
-      type: "number",
+      type: "string",
       default: 400
     },
     featureTitleFontFamily: {
@@ -505,6 +561,10 @@ registerBlockType("wp-learning/features-block", {
       type: "string",
       default: "Roboto"
     },
+    featureBtnText: {
+      type: "string",
+      default: ""
+    }
   },
 
   edit,

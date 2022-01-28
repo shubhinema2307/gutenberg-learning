@@ -4,23 +4,24 @@
     "license": "GPL-2.0-or-later",
     "main": "block.js",
     "devDependencies": {
-      "babel-core": "^6.25.0",
-      "babel-loader": "^7.1.1",
-      "babel-plugin-transform-react-jsx": "^6.24.1",
-      "babel-preset-env": "^1.6.0",
-      "cross-env": "^5.0.1",
-      "webpack": "^3.1.0"
+        "babel-core": "^6.25.0",
+        "babel-loader": "^7.1.1",
+        "babel-plugin-transform-react-jsx": "^6.24.1",
+        "babel-preset-env": "^1.6.0",
+        "cross-env": "^5.0.1",
+        "webpack": "^3.1.0"
     },
     "scripts": {
-      "build": "cross-env BABEL_ENV=default NODE_ENV=production webpack",
-      "dev": "cross-env BABEL_ENV=default webpack --watch"
+        "build": "cross-env BABEL_ENV=default NODE_ENV=production webpack",
+        "dev": "cross-env BABEL_ENV=default webpack --watch"
     },
     "dependencies": {
-      "@wordpress/server-side-render": "^2.1.0",
-      "array-move": "^3.0.1",
-      "classnames": "^2.3.1",
-      "react": "^17.0.2",
-      "react-sortable-hoc": "^2.0.0",
-      "react-tabs": "^3.2.2"
+        "@wordpress/server-side-render": "^2.1.0",
+        "array-move": "^3.0.1",
+        "classnames": "^2.3.1",
+        "jquery": "^3.6.0",
+        "react": "^17.0.2",
+        "react-sortable-hoc": "^2.0.0",
+        "react-tabs": "^3.2.2"
     }
-  }
+}

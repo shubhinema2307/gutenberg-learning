@@ -28,3 +28,20 @@ a { text-decoration: none; cursor: pointer; display: inline-block; }
 /* Features block styles */
 .wp-block-wp-learning-features-block .features-outer-block { display: flex; width: 100%; margin: 0 -10px; flex-wrap: wrap; }
 .wp-block-wp-learning-features-block .features-outer-block div { margin: 10px; }
+
+
+.slide-inner {
+    max-height: 300px !important;
+}
+.slide-inner img {
+    height: 100% !important;
+    width: 100%;
+}
+
+.slide-inner .slide-content {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%,-50%);
+    text-align: center;
+}

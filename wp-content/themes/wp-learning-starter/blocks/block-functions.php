@@ -30,6 +30,14 @@ function wp_learning_block_admin_scripts() {
     wp_register_style('wplearning-block-style', get_template_directory_uri() . '/blocks/assets/css/block.css', array(), time());
     wp_enqueue_script('wplearning-admin-script', get_template_directory_uri() . '/blocks/assets/js/block.js', array('jquery'), time(), true);
 
+	wp_enqueue_script( 'wp-learning-jquery', get_template_directory_uri() . '/assets/js/jquery-3.6.0.min.js', array(), _S_VERSION, true );
+	//wp_enqueue_style( 'wp-learning-bootstrap-style', get_stylesheet_directory_uri() . '/assets/css/bootstrap.min.css', array('wp-edit-blocks'), time());
+	wp_enqueue_style( 'wp-learning-bxslider-style', get_stylesheet_directory_uri() . '/assets/css/jquery.bxslider.css', array('wp-edit-blocks'), time());
+	wp_enqueue_script( 'wp-learning-bootstrap', get_template_directory_uri() . '/assets/js/bootstrap.min.js', array(), _S_VERSION, true );
+	wp_enqueue_script( 'wp-learning-popper', get_template_directory_uri() . '/assets/js/popper.min.js', array(), _S_VERSION, true );
+	wp_enqueue_script( 'wp-learning-bxslider', get_template_directory_uri() . '/assets/js/jquery.bxslider.min.js', array(), _S_VERSION, true );
+	wp_enqueue_script( 'wp-learning-slick', get_template_directory_uri() . '/assets/js/slick.min.js', array(), _S_VERSION, true );
+
     /* register block type */
     register_block_type(
     	'wplearning/wplearning-blocks',
@@ -51,6 +59,10 @@ add_action( 'enqueue_block_editor_assets', 'wp_learning_block_admin_scripts' );
  */
 function wp_learning_block_frontend_style() {
 	wp_enqueue_style( 'wp-learning-block-front-style', get_template_directory_uri() . '/blocks/assets/css/frontend.css', array(), time() );
+	wp_enqueue_style( 'wp-learning-bxslider-front-style', get_template_directory_uri() . '/assets/css/jquery.bxslider.css', array(), time() );
+	wp_enqueue_script( 'wp-learning-jquery', get_template_directory_uri() . '/assets/js/jquery-3.6.0.min.js', array(), _S_VERSION, true );
+	wp_enqueue_script( 'wp-learning-bxslider', get_template_directory_uri() . '/assets/js/jquery.bxslider.min.js', array(), _S_VERSION, true );
+	wp_enqueue_script( 'wp-learning-customjs', get_template_directory_uri() . '/blocks/assets/js/block.js', array(), _S_VERSION, true );
 }
 
 add_action( 'wp_enqueue_scripts', 'wp_learning_block_frontend_style' );
