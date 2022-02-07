@@ -5,4 +5,5 @@ import "./block/about-block/block";
 import "./block/services-block/block";
 import "./block/features-block/block";
 import "./block/slider-block/block";
-import "./block/storyful-content/block";
+import "./block/slider-block-v2/block";
+import "./block/dynamic-post-block/block";

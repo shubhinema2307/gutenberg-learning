@@ -3,43 +3,36 @@
  *  ---
  *  
  */
- const { __ } = wp.i18n;
- const { registerBlockType } = wp.blocks;
- const { Fragment } = wp.element;
- import classnames from 'classnames';
- const {
+const { __ } = wp.i18n;
+const { registerBlockType } = wp.blocks;
+const { Fragment } = wp.element;
+import classnames from 'classnames';
+const {
     InspectorControls,
-    MediaUpload, 
-    MediaUploadCheck,
-    ColorPalette,
-    BlockControls,
-    AlignmentControl,
     RichText,
-    InnerBlocks } = wp.blockEditor;
- const { 
+    InnerBlocks 
+} = wp.blockEditor;
+const { 
     PanelBody,
-    TextControl,
-    SelectControl,
-    RangeControl} = wp.components;
+    RangeControl
+} = wp.components;
 
 
- registerBlockType('wp-learning/service-block', {
-   title: __( 'service' ),
-   icon: 'format-aside',
-   category: 'my-custom-block',
-   keywords: [
-     __( 'service' ),
-   ],
-   parent: ['wp-learning/services-block', 'wp-learning/container-block'],
-   // Enable or disable support for low-level features
-   supports: {
-    align: [ 'full' ],
-   },
-   // Set up data model for custom block
-   attributes: {
+registerBlockType('wp-learning/service-block', {
+    title: __( 'service' ),
+    icon: 'format-aside',
+    category: 'my-custom-block',
+    keywords: [
+        __( 'service' ),
+    ],
+    parent: ['wp-learning/services-block', 'wp-learning/container-block'],
+    supports: {
+        align: [ 'full' ],
+    },
+    attributes: {
         blockId: {
-          type: "string",
-          default: ""
+            type: "string",
+            default: ""
         },
         service_mediaId: {
             type: 'number',
@@ -62,84 +55,62 @@
             default: ''
         }
     },
-   // The UI for the WordPress editor
-   edit: (props) => {
-    const { attributes, setAttributes, clientId, className } = props;
-    const {
-        blockId, 
-        mediaId,
-        mediaUrl,
-        service_mediaId,
-        service_mediaUrl,
-        service_mediaAlt,
-        service_title,
-        service_para
-    } = attributes;
+    edit: (props) => {
+        const { attributes, setAttributes, clientId, className } = props;
+        const {
+            service_title,
+            service_para
+        } = attributes;
 
-    setAttributes({ blockId: clientId });
-    
-    // const onUpdateImage = ( img ) => {
-    //     props.setAttributes({
-    //         service_mediaUrl: img.url,
-    //         service_mediaId: img.id,
-    //         service_mediaAlt: img.alt,
-    //     });
-    //  };
+        setAttributes({ blockId: clientId });
 
-    return (
-        <Fragment>
-            <div className={classnames}>
-                <RichText
-                    tagName="h4"
-                    onChange={(value) => setAttributes({ service_title: value })}
-                    allowedFormats={["core/bold", "core/italic"]}
-                    value={service_title}
-                    placeholder={__("Write your Title...")}
-                    className="service-title"
-                />
-                <RichText
-                    tagName="p"
-                    onChange={(value) => setAttributes({ service_para: value })}
-                    allowedFormats={["core/bold", "core/italic"]}
-                    value={service_para}
-                    placeholder={__("Write your text...")}
-                    className="service-para"
-                />
-            </div>
-        </Fragment>
-    );
-},
-// The output on the live site
-save: (props) => {
- const { attributes, clientId } = props;
- const {
-    blockId, 
-    mediaId,
-    mediaUrl,
-    service_mediaId,
-    service_mediaUrl,
-    service_mediaAlt,
-    service_title,
-    service_para
-} = attributes;
+        return (
+            <Fragment>
+                <div className={classnames}>
+                    <RichText
+                        tagName="h4"
+                        onChange={(value) => setAttributes({ service_title: value })}
+                        allowedFormats={["core/bold", "core/italic"]}
+                        value={service_title}
+                        placeholder={__("Write your Title...")}
+                        className="service-title"
+                    />
+                    <RichText
+                        tagName="p"
+                        onChange={(value) => setAttributes({ service_para: value })}
+                        allowedFormats={["core/bold", "core/italic"]}
+                        value={service_para}
+                        placeholder={__("Write your text...")}
+                        className="service-para"
+                    />
+                </div>
+            </Fragment>
+        );
+    },
+    save: (props) => {
+        const { attributes, clientId } = props;
+        const {
+            service_title,
+            service_para
+        } = attributes;
 
-  return (
-        <Fragment>
-            <div>
-                <RichText.Content
-                    tagName="h4"
-                    value={service_title}
-                    className=""
-                />
-                <RichText.Content
-                    tagName="p"
-                    value={service_para}
-                    className=""
-                />
-            </div>
-        </Fragment>
-  );
-}
+        return (
+                <Fragment>
+                    <div>
+                        <RichText.Content
+                            tagName="h4"
+                            value={service_title}
+                            className=""
+                        />
+                        <RichText.Content
+                            tagName="p"
+                            value={service_para}
+                            className=""
+                        />
+                    </div>
+                </Fragment>
+        );
+    }
 });
 
 
@@ -154,58 +125,54 @@ registerBlockType('wp-learning/services-block', {
     ],
     // Enable or disable support for low-level features
     supports: {
-     align: [ 'full' ],
+        align: [ 'full' ],
     },
     // Set up data model for custom block
     attributes: {
-         blockId: {
-           type: "string",
-           default: ""
-         },
-         columns: {
-             type: 'number',
-             default: 2
-         }
+        blockId: {
+            type: "string",
+            default: ""
+        },
+        columns: {
+            type: 'number',
+            default: 2
+        }
     },
 
+    edit: (props) => {
+        const { attributes, setAttributes, clientId, className } = props;
+        const { columns } = attributes;
 
-   // The UI for the WordPress editor
-   edit: (props) => {
-   const { attributes, setAttributes, clientId, className } = props;
-   const { columns } = attributes;
+        const ALLOWED_BLOCKS = [ 'wp-learning/service-block', 'wp-learning/container-block' ];
 
-   const ALLOWED_BLOCKS = [ 'wp-learning/service-block', 'wp-learning/container-block' ];
-
-   return (
-       <Fragment>
-           <InspectorControls>
-               <PanelBody>
-                   <RangeControl
-                       label={__('columns', 'wp-learning')}
-                       value={ columns }
-                        onChange={columns=>setAttributes({columns})}
-                        min={ 1 }
-                        max={ 4 }
-                   />
-               </PanelBody>
-           </InspectorControls>
-            <div className={`${classnames} has-${columns}-columns`}>
-                <InnerBlocks
-                        allowedBlocks={ ALLOWED_BLOCKS }
-                        
-                />
+        return (
+            <Fragment>
+                <InspectorControls>
+                    <PanelBody>
+                        <RangeControl
+                            label={__('columns', 'wp-learning')}
+                            value={ columns }
+                                onChange={columns=>setAttributes({columns})}
+                                min={ 1 }
+                                max={ 4 }
+                        />
+                    </PanelBody>
+                </InspectorControls>
+                <div className={`${classnames} has-${columns}-columns`}>
+                    <InnerBlocks
+                        allowedBlocks={ ALLOWED_BLOCKS }   
+                    />
+                </div>
+            </Fragment>
+        );
+    },
+    save: (props) => {
+        const { attributes, clientId} = props;
+        const { columns } = attributes;
+        return (
+            <div className={`has-${columns}-columns`}>
+                <InnerBlocks.Content/>
             </div>
-       </Fragment>
-   );
-},
-// The output on the live site
-save: (props) => {
- const { attributes, clientId} = props;
- const { columns } = attributes;
- return (
-        <div className={`has-${columns}-columns`}>
-            <InnerBlocks.Content/>
-        </div>
-    );
-}
+        );
+    }
 });

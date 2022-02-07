@@ -1,47 +1,68 @@
 /* fonts */
 @import url("../font/roboto-web/stylesheet.css");
-@import url("../font/nautogal-web/stylesheet.css");
+@import url("../font/nautigal-web/stylesheet.css");
+@import url("../font/RobotoSlab-web/stylesheet.css");
 
 /* common styles */
-.row { width: 100%; display: flex; }
-.col-25 { flex-basis: 25%; }
-.col-50 { flex-basis: 50%; }
-.col-33 { flex-basis: 33.33%; }
-a { text-decoration: none; cursor: pointer; display: inline-block; }
-.has-1-columns > div { width: calc(100% / 1 - 20px); }
-.has-2-columns > div { width: calc(100% / 2 - 20px); }
-.has-3-columns > div { width: calc(100% / 3 - 20px); }
-.has-4-columns > div { width: calc(100% / 4 - 20px); }
-.has-5-columns > div { width: calc(100% / 5 - 20px); }
-.has-6-columns > div { width: calc(100% / 6 - 20px); }
+.row{width:100%;display:flex;}
+.col-25{flex-basis:25%;}
+.col-50{flex-basis:50%;}
+.col-33{flex-basis:33.33%;}
+a{text-decoration:none;cursor:pointer;display:inline-block;}
+/* .has-1-columns > div{width:calc(100% / 1);}
+.has-2-columns > div{width:calc(100% / 2);}
+.has-3-columns > div{width:calc(100% / 3);}
+.has-4-columns > div{width:calc(100% / 4);}
+.has-5-columns > div{width:calc(100% / 5);}
+.has-6-columns > div{width:calc(100% / 6);} */
 
 /* container block style */
-.wp-block-wp-learning-container-block { width: 1500px !important; max-width: 1280px !important; margin: 0 auto !important; display: flex !important; }
+.wp-block-wp-learning-container-block{width:1500px!important;max-width:1280px!important;margin:0 auto!important;display:flex!important;}
+.wp-block-wp-learning-container-block.has-1-columns > div{width:calc(100% / 1);}
+.wp-block-wp-learning-container-block.has-2-columns > div{width:calc(100% / 2);}
+.wp-block-wp-learning-container-block.has-3-columns > div{width:calc(100% / 3);}
+.wp-block-wp-learning-container-block.has-4-columns > div{width:calc(100% / 4);}
+.wp-block-wp-learning-container-block.has-5-columns > div{width:calc(100% / 5);}
+.wp-block-wp-learning-container-block.has-6-columns > div{width:calc(100% / 6);} 
 
 /* About block style */
-.wp-block-wp-learning-about-block.opposite_column_order .media { order: 2; }
+.wp-block-wp-learning-about-block.opposite_column_order .media{order:2;}
 
 /* Service block style */
-.wp-block-wp-learning-services-block { display: flex; width: 100%; flex-wrap: wrap; margin: 0 -10px; }
-.wp-block-wp-learning-services-block div { margin: 10px; }
+.wp-block-wp-learning-services-block{display:flex;width:100%;flex-wrap:wrap;margin:0 -10px;}
+.wp-block-wp-learning-services-block div{margin:10px;}
+
 
 /* Features block styles */
-.wp-block-wp-learning-features-block .features-outer-block { display: flex; width: 100%; margin: 0 -10px; flex-wrap: wrap; }
-.wp-block-wp-learning-features-block .features-outer-block div { margin: 10px; }
+.wp-block-wp-learning-features-block .features-outer-block{display:flex;width:100%;margin:0 -10px;flex-wrap:wrap;}
+.wp-block-wp-learning-features-block .features-outer-block>div{padding:10px;}
+.features-outer-block.has-1-columns > div{width:calc(100% / 1);}
+.features-outer-block.has-2-columns > div{width:calc(100% / 2);}
+.features-outer-block.has-3-columns > div{width:calc(100% / 3);}
+.features-outer-block.has-4-columns > div{width:calc(100% / 4);}
+.features-outer-block.has-5-columns > div{width:calc(100% / 5);}
+.features-outer-block.has-6-columns > div{width:calc(100% / 6);}
 
+/* slider block style */
+.bx-slider-main-second {width: 100%;}
+.bx-wrapper{border: none !important;}
+.slide-inner{min-height:300px!important;}
+.slide-inner img{height:100%!important;width:100%;}
+.slide-inner .slide-content{position:absolute;top:50%;right:50%;transform:translate(50%,-50%);text-align:center;}
 
-.slide-inner {
-    max-height: 300px !important;
-}
-.slide-inner img {
-    height: 100% !important;
-    width: 100%;
-}
-
-.slide-inner .slide-content {
-    position: absolute;
-    top: 50%;
-    right: 50%;
-    transform: translate(50%,-50%);
-    text-align: center;
-}
+/* dynamic post block style */
+.latest-post .post-wraper {display:flex;width: 100%;margin: 0 -10px}
+.latest-post .row-grid-view {flex-flow: row wrap;}
+.latest-post .row-list-view {flex-direction: column;}
+.latest-post .post-item{padding: 0 10px;}
+.latest-post .has-1-columns.row-grid-view > .post-item{width:calc(100% / 1);}
+.latest-post .has-2-columns.row-grid-view > .post-item{width:calc(100% / 2);}
+.latest-post .has-3-columns.row-grid-view > .post-item{width:calc(100% / 3);}
+.latest-post .has-4-columns.row-grid-view > .post-item{width:calc(100% / 4);}
+.latest-post .has-5-columns.row-grid-view > .post-item{width:calc(100% / 5);}
+.latest-post .has-6-columns.row-grid-view > .post-item{width:calc(100% / 6);}
+.latest-post .pagination { text-align: center; }
+.latest-post .pagination .current { background-color: #00a1ff; padding: 2px 9px; border-radius: 10px; color: #ffffff; font-weight: 700; }
+.latest-post .pagination a { color: #636363; font-weight: 500; margin: 0 6px; }
+.post-view { padding: 0 0 20px; margin: 0 -10px; width: 100%; display: flex; }
+.post-view .view-btn { margin: 0 10px; padding: 3px 5px; font-size: 14px; background-color: #e97f8d; color: #ffffff; font-weight: 400; border-radius: 5px; cursor: pointer; }

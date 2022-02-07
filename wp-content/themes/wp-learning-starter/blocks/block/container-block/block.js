@@ -13,69 +13,67 @@
     PanelBody,
     RangeControl} = wp.components;
 
-
+import classnames from "classnames";
 
  registerBlockType('wp-learning/container-block', {
-   title: __( 'Container' ),
-   icon: 'format-aside',
-   category: 'my-custom-block',
-   keywords: [
-     __( 'container' ),
-     __( 'section' ),
-   ],
-   // Enable or disable support for low-level features
-   supports: {
-    align: [ 'full' ],
-   },
-   // Set up data model for custom block
-   attributes: {
-    columns: {
-        type: 'number',
-        default: 1
+    title: __( 'Container' ),
+    icon: 'format-aside',
+    category: 'my-custom-block',
+    keywords: [
+        __( 'container' ),
+        __( 'section' ),
+    ],
+    supports: {
+        align: [ 'full' ],
+    },
+    attributes: {
+        columns: {
+            type: 'number',
+            default: 1
+        }
+    },
+    edit: (props) => {
+        const { attributes, setAttributes, clientId, className } = props;
+        const {
+            columns
+        } = attributes;
+
+        setAttributes({ blockId: clientId });
+
+        const classes = classnames(className, `has-${columns}-columns`);
+
+        return (
+            <Fragment>
+                <InspectorControls>
+                    <PanelBody>
+                        <RangeControl
+                            label={__('columns', 'wp-learning')}
+                            value={ columns }
+                            onChange={columns=>setAttributes({columns})}
+                            min={ 1 }
+                            max={ 6 }
+                        />
+                    </PanelBody>
+                </InspectorControls>
+                <div className={ classes }>
+                    <InnerBlocks />
+                </div>
+            </Fragment>
+        );
+    },
+
+    save: (props) => {
+        const { attributes, className } = props;
+        const {
+            columns
+        } = attributes;
+
+        const classes = classnames(className, `has-${columns}-columns`);
+
+        return (
+            <div className={classes}>
+                <InnerBlocks.Content />
+            </div>
+        );
     }
-  },
-   // The UI for the WordPress editor
-   edit: (props) => {
-    const { attributes, setAttributes, clientId, className } = props;
-    const {
-        blockId, 
-        columns
-    } = attributes;
-
-    setAttributes({ blockId: clientId });
-
-     return (
-      <Fragment>
-        <InspectorControls>
-            <PanelBody>
-                <RangeControl
-                    label={__('columns', 'wp-learning')}
-                    value={ columns }
-                    onChange={columns=>setAttributes({columns})}
-                    min={ 1 }
-                    max={ 6 }
-                />
-            </PanelBody>
-        </InspectorControls>
-        <div className={ `${className} has-${columns}-columns` }>
-            <InnerBlocks />
-        </div>
-      </Fragment>
-     )
-   },
-
-   // The output on the live site
-   save: (props) => {
-    const { attributes, clientId } = props;
-    const {  
-        blockId, 
-        columns
-    } = attributes;
-
-     return (
-        <div className={ `has-${columns}-columns`}>
-            <InnerBlocks.Content />
-        </div>
-     );
-   }
- })
+ });
